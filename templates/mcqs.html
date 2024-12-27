@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated MCQs</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f9;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-left: 20px;
+        }
+
+        .container {
+            margin-top: 5%;
+            max-width: 800px;
+        }
+
+        .card-body {
+            text-align: left;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .form-check-label {
+            font-size: 1.1rem;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #868e96;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header with logo and title, both centered -->
+    <div class="header">
+        <img src="{{ url_for('static', filename='Logo.png') }}" alt="Logo" class="logo">
+        <h1>Generated MCQs</h1>
+    </div>
+
+    <div class="container">
+        <form method="POST" action="/results">
+            {% if mcqs %}
+                {% for index, mcq in mcqs %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Q{{ index }}: {{ mcq[0] }}</h5>
+                            {% set options = ['A', 'B', 'C', 'D'] %}
+                            {% set num_choices = mcq[1]|length %}
+                            {% for choice_index in range(num_choices) %}
+                                <div class="form-check">
+                                    <input 
+                                        class="form-check-input" 
+                                        type="radio" 
+                                        name="answer-{{ index }}" 
+                                        id="choice{{ index }}{{ choice_index }}" 
+                                        value="{{ options[choice_index] }}">
+                                    <label class="form-check-label" for="choice{{ index }}{{ choice_index }}">
+                                        {{ options[choice_index] }}: {{ mcq[1][choice_index] }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">Show Results</button>
+            {% else %}
+                <p>No MCQs generated yet.</p>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>
